@@ -22,8 +22,8 @@ def show():
     load_dotenv()
 
     # Configure API keys
-    GENAI_API_KEY = "AIzaSyDB-IA5wO7HV39ibwBcpWrU7Hl6acmIpcI"
-    HEYGEN_API_KEY = "NTczMDAyYzI4YTkzNDliZWIyN2JkMTVjOGU3MGM5NjItMTczOTc2NTY2Mg=="
+    GENAI_API_KEY = "AIzaSyDB-IA5wO7HV39ibwBcpWrU7Hl6acmIp"
+    HEYGEN_API_KEY = "NTczMDAyYzI4YTkzNDliZWIyN2JkMTVjOGU3MGM5NjItMTczOTc2NT"
 
     genai.configure(api_key=GENAI_API_KEY)
 
