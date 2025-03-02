@@ -117,7 +117,7 @@ st.markdown("""
             object-fit: contain;
         }
         
-        /* Sidebar logo with better sizing and contrast */
+        /* Sidebar logo with better sizing and contrast REMOVE THIS */
         .sidebar-logo {
             text-align: center;
             padding: 1rem;
@@ -193,7 +193,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Logo in sidebar with improved styling
-st.sidebar.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
+#st.sidebar.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
 st.sidebar.image("Logo.png")
 st.sidebar.markdown('</div>', unsafe_allow_html=True)
 

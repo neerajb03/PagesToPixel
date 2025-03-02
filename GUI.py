@@ -22,8 +22,8 @@ def show():
     load_dotenv()
 
     # Configure API keys
-    GENAI_API_KEY = "AIzaSyDB-IA5wO7HV39ibwBcpWrU7Hl6acmIp"
-    HEYGEN_API_KEY = "NTczMDAyYzI4YTkzNDliZWIyN2JkMTVjOGU3MGM5NjItMTczOTc2NT"
+    GENAI_API_KEY = st.secrets["GENAI_API_KEY"]
+    HEYGEN_API_KEY = st.secrets["HEYGEN_API_KEY"]
 
     genai.configure(api_key=GENAI_API_KEY)
 
@@ -121,7 +121,7 @@ def show():
                 headers = {"accept": "application/json", "x-api-key": HEYGEN_API_KEY}
 
                 progress_bar = st.progress(0)
-                for i in range(13):
+                for i in range(15):
                     progress_bar.progress(i/12)
                     response = requests.get(url, headers=headers)
                     if response.status_code == 200:
@@ -133,7 +133,7 @@ def show():
                         elif data.get("status") == "failed":
                             st.error("Video generation failed.")
                             return None
-                    time.sleep(4)
+                    time.sleep(20)
             
                 st.info("Still processing. Check back in a moment.")
                 return None
@@ -144,104 +144,105 @@ def show():
     # Create two columns for upload and results
     col1, col2 = st.columns([1, 1])
     
-    with col1:
-        # Enhanced card for upload with new color scheme
-        st.markdown("""
-        <div class="card">
-            <h4>Upload Document</h4>
-        """, unsafe_allow_html=True)
+    #with col1:
+        # Enhanced card for upload with new color scheme - REDUNDANT
+        #st.markdown("""
+        #<div class="card">
+       #     <h4>Upload Document</h4>
+        #""", unsafe_allow_html=True)
         
         # Upload file
-        uploaded_file = st.file_uploader("Select a file", type=["pdf", "docx", "pptx"])
+    uploaded_file = st.file_uploader("Select a file", type=["pdf", "docx", "pptx"])
+    
+    if uploaded_file is not None:
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        file_path = f"temp_file.{file_extension}"
+    
+        with open(file_path, "wb") as f:
+            f.write(uploaded_file.read())
+    
+        st.success(f"✓ {uploaded_file.name}")
         
-        if uploaded_file is not None:
-            file_extension = uploaded_file.name.split('.')[-1].lower()
-            file_path = f"temp_file.{file_extension}"
-        
-            with open(file_path, "wb") as f:
-                f.write(uploaded_file.read())
-        
-            st.success(f"✓ {uploaded_file.name}")
-            
-            # Summary options with improved styling and better contrast
-            st.markdown('<h5>Summary Options</h5>', unsafe_allow_html=True)
-            summary_type = st.radio("Type:", ("Number of Lines", "Number of Paragraphs", "Custom Prompt"))
+        # Summary options with improved styling and better contrast
+        #with col2:
+        st.markdown('<h5>Summary Options</h5>', unsafe_allow_html=True)
+        summary_type = st.radio("Type:", ("Number of Lines", "Number of Paragraphs", "Custom Prompt"))
 
-            if summary_type == "Number of Lines":
-                num_lines = st.slider("Lines:", min_value=1, max_value=20, value=5)
-            elif summary_type == "Number of Paragraphs":
-                num_paragraphs = st.slider("Paragraphs:", min_value=1, max_value=10, value=1)
+        if summary_type == "Number of Lines":   
+            num_lines = st.text_area("Number of lines","Enter number of lines here...",height=68)
+        elif summary_type == "Number of Paragraphs":
+            num_paragraphs = st.text_area("Number of paragraphs","Enter number of paragraphs here...", height=68)
+        else:
+            custom_prompt = st.text_area("Custom prompt:", "Summarize this document concisely.", height=100)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Avatar options if file uploaded
+    if uploaded_file is not None:
+        #st.markdown("""
+        #<div class="card">
+        #    <h4>Generate</h4>
+        #""", unsafe_allow_html=True)
+        
+        # Enhanced generate button with better contrast
+        if st.button("Create Video", key="generate_btn", use_container_width=True):
+            file_text = extract_text(file_path, file_extension)
+        
+            if file_text:
+                # Use right column for results
+                #with col2:
+                st.markdown("""
+                <div class="card">
+                    <h4>Output</h4>
+                """, unsafe_allow_html=True)
+                
+                audio_summary = generate_summary(file_text, summary_type, num_lines, num_paragraphs, custom_prompt)
+            
+                if audio_summary:
+                    st.markdown('<h5>Summary:</h5>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="background-color:#f0f4f8; padding:10px; border-radius:8px; margin-bottom:15px; border: 1px solid #cbd5e0; color: #2d3748;">{audio_summary}</div>', unsafe_allow_html=True)
+                
+                    video_id = generate_talking_avatar(audio_summary)
+                
+                    if video_id:
+                        video_url = get_video_url(video_id)
+                    
+                        if video_url:
+                            st.success("✓ Video ready")
+                            st.video(video_url)
+                            st.markdown(f'<a href="{video_url}" target="_blank" style="display: inline-block; padding: 6px 12px; background-color: #2b6cb0; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">Download Video</a>', unsafe_allow_html=True)
+                        else:
+                            st.info("Video processing. Check back in a moment.")
+                    else:
+                        st.error("Couldn't generate video.")
+                else:
+                    st.error("Couldn't generate summary.")
+                
+                st.markdown("</div>", unsafe_allow_html=True)
             else:
-                custom_prompt = st.text_area("Custom prompt:", "Summarize this document concisely.", height=100)
+                st.error("Couldn't extract text from file.")
         
         st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Avatar options if file uploaded
-        if uploaded_file is not None:
-            st.markdown("""
-            <div class="card">
-                <h4>Generate</h4>
-            """, unsafe_allow_html=True)
-            
-            # Enhanced generate button with better contrast
-            if st.button("Create Video", key="generate_btn", use_container_width=True):
-                file_text = extract_text(file_path, file_extension)
-            
-                if file_text:
-                    # Use right column for results
-                    with col2:
-                        st.markdown("""
-                        <div class="card">
-                            <h4>Output</h4>
-                        """, unsafe_allow_html=True)
-                        
-                        audio_summary = generate_summary(file_text, summary_type, num_lines, num_paragraphs, custom_prompt)
-                    
-                        if audio_summary:
-                            st.markdown('<h5>Summary:</h5>', unsafe_allow_html=True)
-                            st.markdown(f'<div style="background-color:#f0f4f8; padding:10px; border-radius:8px; margin-bottom:15px; border: 1px solid #cbd5e0; color: #2d3748;">{audio_summary}</div>', unsafe_allow_html=True)
-                        
-                            video_id = generate_talking_avatar(audio_summary)
-                        
-                            if video_id:
-                                video_url = get_video_url(video_id)
-                            
-                                if video_url:
-                                    st.success("✓ Video ready")
-                                    st.video(video_url)
-                                    st.markdown(f'<a href="{video_url}" target="_blank" style="display: inline-block; padding: 6px 12px; background-color: #2b6cb0; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">Download Video</a>', unsafe_allow_html=True)
-                                else:
-                                    st.info("Video processing. Check back in a moment.")
-                            else:
-                                st.error("Couldn't generate video.")
-                        else:
-                            st.error("Couldn't generate summary.")
-                        
-                        st.markdown("</div>", unsafe_allow_html=True)
-                else:
-                    st.error("Couldn't extract text from file.")
-            
-            st.markdown("</div>", unsafe_allow_html=True)
     
     # Right column with enhanced instructions if no file uploaded
-    with col2:
-        if uploaded_file is None:
-            st.markdown("""
-            <div class="card">
-                <h4>How It Works</h4>
-                <ol style="padding-left: 1.2rem; margin-bottom: 0;">
-                    <li>Upload document</li>
-                    <li>Choose summary options</li>
-                    <li>Generate video</li>
-                    <li>Download or share</li>
-                </ol>
-            </div>
-            
-            <div class="card">
-                <h4>Supported Files</h4>
-                <p>PDF, DOCX, and PPTX</p>
-            </div>
-            """, unsafe_allow_html=True)
+    #with col2:
+    if uploaded_file is None:
+        st.markdown("""
+        <div class="card">
+            <h4>How It Works</h4>
+            <ol style="padding-left: 1.2rem; margin-bottom: 0;">
+                <li>Upload document</li>
+                <li>Choose summary options</li>
+                <li>Generate video</li>
+                <li>Download or share</li>
+            </ol>
+        </div>
+        
+        <div class="card">
+            <h4>Supported Files</h4>
+            <p>PDF, DOCX, and PPTX</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     # End animation div
     st.markdown('</div>', unsafe_allow_html=True)
