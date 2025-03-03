@@ -40,7 +40,16 @@ st.markdown("""
             color:white;
             background-color:white;
         }
-            
+
+        .top-bar{
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+               
         /* Improved button styling with higher contrast */
         .stButton>button {
             border-radius: 6px;
@@ -89,7 +98,7 @@ st.markdown("""
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(26, 54, 93, 0.9);
+            background-color: #5173AF;
             backdrop-filter: blur(5px);
             text-align: center;
             padding: 8px;
