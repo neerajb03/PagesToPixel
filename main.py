@@ -39,7 +39,7 @@ st.markdown("""
         /* Improved button styling with higher contrast */
         .stButton>button {
             border-radius: 6px;
-            background-color: #2b6cb0;
+            background-color: orange;
             color: white;
             font-weight: 500;
             border: none;
@@ -152,6 +152,11 @@ st.markdown("""
             border: 1px solid #e2e8f0;
         }
         
+        .stButton>button {
+            color: white;  # Change this to your desired text color
+            background-color: white;  # Change the background color if you want
+        }
+
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 3px 6px rgba(0,0,0,0.08);
@@ -187,9 +192,7 @@ st.markdown("""
     <div class="fade-in"></div>
     
     <!-- Fixed logo that remains visible even when sidebar is collapsed -->
-    <div class="fixed-logo">
-        <img src="Logo.png" alt="Pages To Pixels Logo">
-    </div>
+            
 """, unsafe_allow_html=True)
 
 # Logo in sidebar with improved styling

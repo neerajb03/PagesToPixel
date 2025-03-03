@@ -169,9 +169,9 @@ def show():
         summary_type = st.radio("Type:", ("Number of Lines", "Number of Paragraphs", "Custom Prompt"))
 
         if summary_type == "Number of Lines":   
-            num_lines = st.text_area("Number of lines","Enter number of lines here...",height=68)
+            num_lines = st.text_area("Number of lines",placeholder="Enter number of lines here...",height=68)
         elif summary_type == "Number of Paragraphs":
-            num_paragraphs = st.text_area("Number of paragraphs","Enter number of paragraphs here...", height=68)
+            num_paragraphs = st.text_area("Number of paragraphs",placeholder="Enter number of paragraphs here...", height=68)
         else:
             custom_prompt = st.text_area("Custom prompt:", "Summarize this document concisely.", height=100)
     
@@ -179,7 +179,7 @@ def show():
     
     # Avatar options if file uploaded
     if uploaded_file is not None:
-        #st.markdown("""
+        #st.markdown(""" Unnessecary card
         #<div class="card">
         #    <h4>Generate</h4>
         #""", unsafe_allow_html=True)
