@@ -35,7 +35,12 @@ st.markdown("""
         p, li {
             color: #2d3748;
         }
-        
+            
+        .css-1e9s5jq{
+            color:white;
+            background-color:white;
+        }
+            
         /* Improved button styling with higher contrast */
         .stButton>button {
             border-radius: 6px;
