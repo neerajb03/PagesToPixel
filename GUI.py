@@ -113,33 +113,37 @@ def show():
             st.error(f"Error: {str(e)}")
             return None
 
-    # Function to fetch video URL using video ID
     def get_video_url(video_id):
-        try:
-            with st.spinner("Processing..."):
-                url = f"https://api.heygen.com/v1/video_status.get?video_id={video_id}"
-                headers = {"accept": "application/json", "x-api-key": HEYGEN_API_KEY}
+    try:
+        with st.spinner("Processing..."):
+            url = f"https://api.heygen.com/v1/video_status.get?video_id={video_id}"
+            headers = {"accept": "application/json", "x-api-key": HEYGEN_API_KEY}
 
-                progress_bar = st.progress(0)
-                for i in range(15):
-                    progress_bar.progress(i/12)
-                    response = requests.get(url, headers=headers)
-                    if response.status_code == 200:
-                        data = response.json().get("data", {})
-                        if data.get("status") == "completed" and data.get("video_url"):
-                            progress_bar.progress(1.0)
-                            time.sleep(0.3)
-                            return data.get("video_url")
-                        elif data.get("status") == "failed":
-                            st.error("Video generation failed.")
-                            return None
-                    time.sleep(20)
+            progress_bar = st.progress(0)
+            total_steps = 13  # Using 13 instead of 12 to avoid exceeding 1.0
             
-                st.info("Still processing. Check back in a moment.")
-                return None
-        except Exception as e:
-            st.error(f"Error: {str(e)}")
+            for i in range(total_steps):
+                # This ensures progress stays within [0.0, 1.0]
+                progress_value = min(i / total_steps, 1.0)
+                progress_bar.progress(progress_value)
+                
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    data = response.json().get("data", {})
+                    if data.get("status") == "completed" and data.get("video_url"):
+                        progress_bar.progress(1.0)
+                        time.sleep(0.3)
+                        return data.get("video_url")
+                    elif data.get("status") == "failed":
+                        st.error("Video generation failed.")
+                        return None
+                time.sleep(20)
+        
+            st.info("Still processing. Check back in a moment.")
             return None
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        return None
 
     # Create two columns for upload and results
     col1, col2 = st.columns([1, 1])
