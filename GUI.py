@@ -138,7 +138,7 @@ def show():
                             # Display status only if it changes
                             if status != last_status:
                                 if status == "processing":
-                                    st.info(f"Video is processing...")
+                                    st.info(f"This may take a few minutes...")
                                 elif status == "completed":
                                     progress_bar.progress(1.0)
                                     st.success("Video generation complete!")
