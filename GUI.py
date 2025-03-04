@@ -115,34 +115,54 @@ def show():
 
     def get_video_url(video_id):
     try:
-        with st.spinner("Processing..."):
+        with st.spinner("Processing video..."):
             url = f"https://api.heygen.com/v1/video_status.get?video_id={video_id}"
             headers = {"accept": "application/json", "x-api-key": HEYGEN_API_KEY}
 
             progress_bar = st.progress(0)
-            total_steps = 13  # Using 13 instead of 12 to avoid exceeding 1.0
+            max_attempts = 30  # Increased max attempts to allow for longer processing time
+            wait_time = 20  # Time to wait between API calls in seconds
             
-            for i in range(total_steps):
-                # This ensures progress stays within [0.0, 1.0]
-                progress_value = min(i / total_steps, 1.0)
+            for attempt in range(max_attempts):
+                # Safe progress calculation that never exceeds 0.95
+                progress_value = min(0.95 * attempt / max_attempts, 0.95)
                 progress_bar.progress(progress_value)
                 
-                response = requests.get(url, headers=headers)
-                if response.status_code == 200:
-                    data = response.json().get("data", {})
-                    if data.get("status") == "completed" and data.get("video_url"):
-                        progress_bar.progress(1.0)
-                        time.sleep(0.3)
-                        return data.get("video_url")
-                    elif data.get("status") == "failed":
-                        st.error("Video generation failed.")
-                        return None
-                time.sleep(20)
-        
-            st.info("Still processing. Check back in a moment.")
+                st.info(f"Checking video status... (Attempt {attempt+1}/{max_attempts})")
+                
+                try:
+                    response = requests.get(url, headers=headers)
+                    
+                    if response.status_code == 200:
+                        data = response.json().get("data", {})
+                        status = data.get("status", "")
+                        
+                        if status == "completed" and data.get("video_url"):
+                            progress_bar.progress(1.0)
+                            st.success("Video generation complete!")
+                            return data.get("video_url")
+                        elif status == "failed":
+                            st.error("Video generation failed.")
+                            return None
+                        elif status == "processing":
+                            st.info(f"Video still processing... ({data.get('progress', 0)}%)")
+                        else:
+                            st.info(f"Current status: {status}")
+                    else:
+                        st.warning(f"API returned status code: {response.status_code}")
+                
+                except requests.exceptions.RequestException as e:
+                    st.warning(f"API request issue: {str(e)}. Retrying...")
+                
+                time.sleep(wait_time)
+            
+            # After all attempts, if we still don't have a result
+            st.warning("Maximum attempts reached. The video may still be processing.")
+            st.info("You can check back later with this video ID: " + video_id)
             return None
+            
     except Exception as e:
-        st.error(f"Error: {str(e)}")
+        st.error(f"Error in video retrieval: {str(e)}")
         return None
 
     # Create two columns for upload and results
