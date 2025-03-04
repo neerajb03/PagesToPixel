@@ -73,7 +73,8 @@ st.markdown("""
             background-color: rgba(116,143,191);
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
+       
+            
         [data-testid="stSidebar"] .stButton>button {
             width: 100%;
             margin-bottom: 0.5rem;
@@ -241,7 +242,7 @@ st.sidebar.markdown("<hr>", unsafe_allow_html=True)
 # Brief info section in sidebar
 st.sidebar.markdown("""
 <div class="card" style="background-color: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2);">
-    <p style="font-size: 0.9rem; color: white;">Pages To Pixels converts documents into summarized video presentations.</p>
+    <p style="font-size: 0.9rem; color: white;">Pages To Pixels converts documents into summarized video.</p>
 </div>
 """, unsafe_allow_html=True)
 
