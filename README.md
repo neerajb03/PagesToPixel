@@ -42,7 +42,11 @@ To run the application:
 ```bash
 streamlit main.py
 ```
-
+
+![ptp1](https://github.com/user-attachments/assets/7436dc00-d223-4e30-aaa9-4ff894ca08df)
+
+![ptp2](https://github.com/user-attachments/assets/7faec578-5269-4a4f-a319-39acd6c9b75b)
+
 
 This will launch the GUI, allowing you to select a PDF file for conversion. The converted images will be saved in the specified output directory.
 
@@ -56,10 +60,3 @@ Contributions are welcome! To contribute:
 4. Push to the branch: `git push origin feature/YourFeature`
 5. Submit a pull request.
 
-## License
-
-This project is licensed under the MIT License.
-
----
-
-*Note: This README is based on the available project structure and may require updates to accurately reflect the project's current state.* 
