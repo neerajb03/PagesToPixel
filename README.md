@@ -42,13 +42,16 @@ To run the application:
 ```bash
 streamlit main.py
 ```
+This will launch the GUI, allowing you to select a PDF file for conversion. The converted images will be saved in the specified output directory.
+
 
 ![ptp1](https://github.com/user-attachments/assets/7436dc00-d223-4e30-aaa9-4ff894ca08df)
 
 ![ptp2](https://github.com/user-attachments/assets/7faec578-5269-4a4f-a319-39acd6c9b75b)
+![ptp2](https://github.com/user-attachments/assets/09b692cb-afca-40da-bdc4-6531de20347d)
 
+![ptp3](https://github.com/user-attachments/assets/36e3a444-ced8-4bb6-a7a0-a94987a40dcc)
 
-This will launch the GUI, allowing you to select a PDF file for conversion. The converted images will be saved in the specified output directory.
 
 ## Contributing
 
