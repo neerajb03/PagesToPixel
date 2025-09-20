@@ -1,11 +1,11 @@
 
 # PagesToPixel
 
-PagesToPixel is a Python-based application that converts PDF documents into images, enabling users to visualize and process PDF content as images.
+PagesToPixel is a Python-based application that converts PDF documents into Avatar based videos, enabling users to visualize and process PDF content as videos.
 
 ## Features
 
-- **PDF to Image Conversion**: Transforms each page of a PDF document into a corresponding image.
+- **PDF Summarisation**: Extracts content and summarizes the content without content loss.
 - **Graphical User Interface (GUI)**: Provides an intuitive interface for users to select PDF files and view the resulting images.
 - **Customization Options**: Allows users to configure settings such as output image format and resolution.
 
