@@ -52,7 +52,7 @@ def show():
     def generate_summary(file_text, summary_type, num_lines, num_paragraphs, custom_prompt):
         try:
             with st.spinner("Generating summary..."):
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel("gemini-2.5-flash")
             
                 if summary_type == "Number of Lines":
                     prompt = f"Summarize the following content in {num_lines} lines:"
