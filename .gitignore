@@ -1,0 +1,2 @@
+# Ignore Streamlit secrets file so API keys are not checked into git
+.streamlit/secrets.toml
